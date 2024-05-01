@@ -2,6 +2,8 @@
 -add statements for python env.
 -revise JS object instantiate statement for opov issue.
 -refactor pyjsarray for performance.
+-revise pyjsarray ndarray indexing.
+-revise ndarray str method.
 
 0.54    2021-07-16
 -revise pyjsarray module for transcrypt.
