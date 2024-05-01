@@ -33,358 +33,93 @@ class window:
 # __pragma__ ('noskip')
 
 
-class TypedArray(object):
+# __pragma__ ('noopov')
 
+
+def Uint8ClampedArray(*args):
     """
-    TypedArray is the base class that wraps the JavaScript TypedArray objects.
-    The derived objects provides an interface to the JavaScript array objects.
-    Typedarray implemented: Uint8ClampedArray, Uint8Array, Uint16Array, Uint32Array, Int8Array, Int16Array, Int32Array, Float32Array, Float64Array.
-    The module contains an Ndarray class to instantiate N-dimensional arrays, ImageData and ImageMatrix classes that provide an interface to canvas ImageData, and BitSet classes that implement a bit array.
+    Uint8ClampedArray TypedArray constructor.
     """
-
-    __obj = { 'Uint8ClampedArray': window.Uint8ClampedArray,
-              'Uint8Array':        window.Uint8Array,
-              'Uint16Array':       window.Uint16Array,
-              'Uint32Array':       window.Uint32Array,
-              'Int8Array':         window.Int8Array,
-              'Int16Array':        window.Int16Array,
-              'Int32Array':        window.Int32Array,
-              'Float32Array':      window.Float32Array,
-              'Float64Array':      window.Float64Array }
-
-    # __pragma__ ('kwargs')
-
-    def __init__(self, data=None, offset=None, length=None, typedarray=None):
-        """
-        The TypedArray object is instantiated with either the array size, an array of TypedArray or Python type, or an existing ArrayBuffer to view, which creates a new TypedArray of size and included data as the specified type. Optional arguments include offset index at which ArrayBuffer data is inserted and length of an ArrayBuffer.
-        """
-        if data:
-            if isinstance(data, int):
-                self._data = __new__(typedarray(data))    # __:noopov
-            elif isinstance(data, (list,tuple)):
-                self._data = __new__(typedarray(data))    # __:noopov
-            elif isinstance(data, TypedArray):
-                self._data = __new__(typedarray(data._data))    # __:noopov
-            else:   #TypedArray or ArrayBuffer
-                if offset is None and length is None:
-                    self._data = __new__(typedarray(data))    # __:noopov
-                else:
-                    if offset is None:
-                        offset = 0
-                    if length is None:
-                        self._data = __new__(typedarray(data, offset))    # __:noopov
-                    else:
-                        self._data = __new__(typedarray(data, offset, length))    # __:noopov
-        else:
-            self._data = None
-
-    # __pragma__ ('nokwargs')
-
-    def _array(self, array):
-        typedarray = self.__class__()
-        typedarray._data = array
-        return typedarray
-
-    def __str__(self):
-        return self._data.toString()
-
-    def __iter__(self):
-        index = 0
-        while index < self._data.length:
-            yield self[index]   # __:opov
-            index += 1
-
-    def __getitem__(self, index):
-        return self._data[index]
-
-    def __setitem__(self, index, value):
-        self._data[index] = value
-        return None
-
-    def __len__(self):
-        return self._data.length
-
-    def filter(self, func):
-        """
-        Return typedarray filtered by provided function.
-        """
-        return self._array(self._data.filter(func))
-
-    def map(self, func):
-        """
-        Return typedarray of applying provided function across elements.
-        """
-        return self._array(self._data.map(func))
-
-    def reduce(self, func):
-        """
-        Return result of applying provided accumlator function.
-        """
-        return self._array(self._data.reduce(func))
-
-    def slice(self, i, j):
-        """
-        Return typedarray from indices i,j.
-        """
-        return self._array(self._data.slice(i,j))
-
-    def set(self, data, offset=0):
-        """
-        Set data to the array. Arguments: data is a list of either the TypedArray or Python type, offset is the start index where data will be set (defaults to 0).
-        """
-        if isinstance(data, (list,tuple)):
-            self._data.set(data, offset)
-        elif isinstance(data, TypedArray):
-            self._data.set(data._data, offset)
-
-    def subarray(self, begin=0, end=None):
-        """
-        Retrieve a subarray of the array. The subarray is a is a view of the derived array. Optional arguments begin and end (default to begin/end of the array) are the index spanning the subarray.
-        """
-        if end is None:
-            end = self._data.length
-        array = self._data.subarray(begin, end)
-        typedarray = self.__class__()
-        typedarray._data = array
-        return typedarray
-
-    def getLength(self):
-        """
-        Return array.length attribute.
-        """
-        return self._data.length
-
-    def getByteLength(self):
-        """
-        Return array.byteLength attribute.
-        """
-        return self._data.byteLength
-
-    def getBuffer(self):
-        """
-        Return array.buffer attribute.
-        """
-        return self._data.buffer
-
-    def getByteOffset(self):
-        """
-        Return array.byteOffset attribute.
-        """
-        return self._data.byteOffset
-
-    def getBytesPerElement(self):
-        """
-        Return array.BYTES_PER_ELEMENT attribute.
-        """
-        return self._data.BYTES_PER_ELEMENT
-
-    def getArray(self):
-        """
-        Return JavaScript TypedArray.
-        """
-        return self._data
-
-    def setArray(self, array):
-        """
-        Set JavaScript TypedArray.
-        """
-        self._data = array
-        return None
+    return __new__(window.Uint8ClampedArray(*args))
 
 
-class Uint8ClampedArray(TypedArray):
+def Int8Array(*args):
     """
-    Create a TypedArray interface to Uint8ClampedArray.
+    Int8Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Uint8ClampedArray']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Int8Array(*args))
 
 
-class Uint8Array(TypedArray):
+def Uint8Array(*args):
     """
-    Create a TypedArray interface to Uint8Array.
+    Uint8Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Uint8Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Uint8Array(*args))
 
 
-class Uint16Array(TypedArray):
+def Int16Array(*args):
     """
-    Create a TypedArray interface to Uint16Array.
+    Int16Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Uint16Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Int16Array(*args))
 
 
-class Uint32Array(TypedArray):
+def Uint16Array(*args):
     """
-    Create a TypedArray interface to Uint32Array.
+    Uint16Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Uint32Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Uint16Array(*args))
 
 
-class Int8Array(TypedArray):
+def Int32Array(*args):
     """
-    Create a TypedArray interface to Int8Array.
+    Int32Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Int8Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Int32Array(*args))
 
 
-class Int16Array(TypedArray):
+def Uint32Array(*args):
     """
-    Create a TypedArray interface to Int16Array.
+    Uint32Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Int16Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Uint32Array(*args))
 
 
-class Int32Array(TypedArray):
+def Float32Array(*args):
     """
-    Create a TypedArray interface to Int32Array.
+    Float32Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Int32Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Float32Array(*args))
 
 
-class Float32Array(TypedArray):
+def Float64Array(*args):
     """
-    Create a TypedArray interface to Float32Array.
+    Float64Array TypedArray constructor.
     """
-
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Float32Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    return __new__(window.Float64Array(*args))
 
 
-class Float64Array(TypedArray):
-    """
-    Create a TypedArray interface to Float64Array.
-    """
+class Ndarray:
 
-    def __init__(self, data=None, offset=None, length=None):
-        typedarray = TypedArray.__obj['Float64Array']
-        if typedarray != None:
-            TypedArray.__init__(self, data, offset, length, typedarray)
-        else:
-            raise NotImplementedError("TypedArray data type not implemented")
+    _typedarray = {'uint8c':  window.Uint8ClampedArray,
+                   'int8':    window.Int8Array,
+                   'uint8':   window.Uint8Array,
+                   'int16':   window.Int16Array,
+                   'uint16':  window.Uint16Array,
+                   'int32':   window.Int32Array,
+                   'uint32':  window.Uint32Array,
+                   'float32': window.Float32Array,
+                   'float64': window.Float64Array}
 
-
-class CanvasPixelArray(TypedArray):
-    """
-    Create a TypedArray interface to CanvasPixelArray.
-    """
-
-    def __init__(self, data=None, offset=None, length=None):
-        TypedArray.__init__(self, data, offset, length)
-        self._superArray = None
-        self._superIndex = (0,0)
-
-    def __iter__(self):
-        if not self._superArray:
-            TypedArray.__iter__(self)
-        else:
-            index = self._superIndex[0]
-            while index < self._superIndex[1]:
-                yield self._superArray[index]
-                index += 1
-
-    def __getitem__(self, index):
-        if not self._superArray:
-            return TypedArray.__getitem__(self, index)
-        else:
-            return self._superArray.__getitem__(index+self._superIndex[0])
-
-    def __setitem__(self, index, value):
-        if not self._superArray:
-            TypedArray.__setitem__(self, index, value)
-        else:
-            self._superArray.__setitem__(index+self._superIndex[0], value)
-        return None
-
-    def set(self, data, offset=0):
-        """
-        Set data to the array. Arguments: data is a list of either the TypedArray or Python type, offset is the start index where data will be set (defaults to 0).
-        """
-        if not self._superArray:
-            for index in range(len(data)):
-                self[index+offset] = data[index]   # __:opov 
-        else:
-            self._superArray.set(data, offset+self._superIndex[0])
-
-    def subarray(self, begin=0, end=None):
-        """
-        Retrieve a subarray of the array. The subarray is a is a view of the derived array. Optional arguments begin and end (default to begin/end of the array) are the index spanning the subarray.
-        """
-        if end is None:
-            end = self._data.length
-        array = self.__class__()
-        array._data = self._data
-        array._superArray = self
-        array._superIndex = (begin,end)
-        return array
-
-
-class Ndarray(object):
-
-    __typedarray = { 'uint8c':  Uint8ClampedArray,
-                     'int8':    Int8Array,
-                     'uint8':   Uint8Array,
-                     'int16':   Int16Array,
-                     'uint16':  Uint16Array,
-                     'int32':   Int32Array,
-                     'uint32':  Uint32Array,
-                     'float32': Float32Array,
-                     'float64': Float64Array }
-
-    __dtypes = { 'uint8c':'uint8c', 'x':'uint8c', 0:'uint8c',
-                 'int8':'int8', 'b':'int8', 4:'int8',
-                 'uint8':'uint8', 'B':'uint8', 1:'uint8',
-                 'int16':'int16', 'h':'int16', 5:'int16',
-                 'uint16':'uint16', 'H':'uint16', 2:'uint16',
-                 'int32':'int32', 'i':'int32', 6:'int32',
-                 'uint32':'uint32', 'I':'uint32', 3:'uint32',
-                 'float32':'float32', 'f':'float32', 7:'float32',
-                 'float64':'float64', 'd':'float64', 8:'float64' }
+    _dtypes = {'uint8c':'uint8c', 'x':'uint8c', 0:'uint8c',
+               'int8':'int8', 'b':'int8', 4:'int8',
+               'uint8':'uint8', 'B':'uint8', 1:'uint8',
+               'int16':'int16', 'h':'int16', 5:'int16',
+               'uint16':'uint16', 'H':'uint16', 2:'uint16',
+               'int32':'int32', 'i':'int32', 6:'int32',
+               'uint32':'uint32', 'I':'uint32', 3:'uint32',
+               'float32':'float32', 'f':'float32', 7:'float32',
+               'float64':'float64', 'd':'float64', 8:'float64'}
 
     def __init__(self, dim, dtype='float64'):
         """
@@ -402,13 +137,13 @@ class Ndarray(object):
                 'float64'   Float64Array
         Operator and index functionality requires __pragma__ ('opov'). 
         """
-        self._dtype = self.__dtypes[dtype]
-        typedarray = self.__typedarray[self._dtype]
+        self._dtype = self._dtypes[dtype]
+        typedarray = self._typedarray[self._dtype]
         if isinstance(dim, tuple):
             size = 1
             for i in dim:
                 size *= i
-            self._data = typedarray(size)
+            self._data = __new__(typedarray(size))
             self._shape = dim
             indices = []
             for i in self._shape:
@@ -416,23 +151,23 @@ class Ndarray(object):
                 indices.append(size)
             self._indices = tuple(indices)
         elif isinstance(dim, int):
-            self._data = typedarray(dim)
+            self._data = __new__(typedarray(dim))
             self._shape = (dim,)
             self._indices = (self._shape[0],)
         elif isinstance(dim, list):
             if not (len(dim)>0 and isinstance(dim[0], list)):
-                self._data = typedarray(dim)
+                self._data = __new__(typedarray(dim))
                 self._shape = (len(dim),)
                 self._indices = (self._shape[0],)
             else:
                 _dat = self._lflatten(dim)
                 _dim = self._lshape(dim)
-                self._data = typedarray(list(_dat))
+                self._data = __new__(typedarray(list(_dat)))
                 self._shape = (len(self._data),)
                 self.setshape(tuple(list(_dim)))
         else:
             self._data = dim
-            self._shape = (len(dim),)
+            self._shape = (dim.length,)
             self._indices = (self._shape[0],)
 
     def getshape(self):
@@ -490,7 +225,7 @@ class Ndarray(object):
         if isinstance(index, (list,tuple)):
             indexLn, shapeLn = len(index), len(self._shape)
             if indexLn == shapeLn:
-                return self._data[sum([index[i]*self._indices[i] for i in range(indexLn)])]     # __:opov
+                return self._data[sum([index[i]*self._indices[i] for i in range(indexLn)])]
             else:
                 begin = sum([index[i]*self._indices[i] for i in range(indexLn)])
                 end = begin + self._indices[indexLn-1]
@@ -501,7 +236,7 @@ class Ndarray(object):
                 return array
         else:
             if len(self._shape) == 1:
-                return self._data[index]    # __:opov
+                return self._data[index]
             else:
                 begin = index * self._indices[0]
                 end = begin + self._indices[0]
@@ -524,7 +259,7 @@ class Ndarray(object):
         if isinstance(index, (list,tuple)):
             indexLn, shapeLn = len(index), len(self._shape)
             if indexLn == shapeLn:
-                self._data[sum([index[i]*self._indices[i] for i in range(indexLn)])] = value    # __:opov
+                self._data[sum([index[i]*self._indices[i] for i in range(indexLn)])] = value
             else:
                 begin = sum([index[i]*self._indices[i] for i in range(indexLn)])
                 end = begin + self._indices[indexLn-1]
@@ -537,7 +272,7 @@ class Ndarray(object):
                 subarray.set(value)
         else:
             if len(self._shape) == 1:
-                self._data[index] = value   # __:opov
+                self._data[index] = value
             else:
                 begin = index * self._indices[0]
                 end = begin + self._indices[0]
@@ -574,7 +309,7 @@ class Ndarray(object):
         else:
             index = 0
             while index < self._shape[0]:
-                yield self._data[index]     # __:opov
+                yield self._data[index]
                 index += 1
 
     def _array_dim(self):
@@ -592,14 +327,14 @@ class Ndarray(object):
             if 'int' in self._dtype:
                 for val in array:
                     sv = '{}'.format(val)
-                    sv = '{}{}'.format((vlen-len(sv))*' ', sv)   # __:opov
+                    sv = '{}{}'.format((vlen-len(sv))*' ', sv)    # __:opov
                     s.append(sv)
             else:
                 for val in array:
                     sv = '{}'.format(round(val,4))
                     if '.' not in sv:
                         sv = '{}.0000'.format(sv)
-                    sv = '{}{}'.format((vlen-len(sv))*' ', sv)   # __:opov
+                    sv = '{}{}'.format((vlen-len(sv))*' ', sv)    # __:opov
                     s.append(sv)
             vstr.append('[{}]'.format(' '.join(s)))
         else:
@@ -607,7 +342,7 @@ class Ndarray(object):
                 if i == 0:
                     vstr.append('[')
                 else:
-                    vstr.append(' '*(len(self._shape)-len(a._shape)))   # __:opov
+                    vstr.append(' '*(len(self._shape)-len(a._shape)))    # __:opov
                 self._array_str(a, vlen, vstr)
                 if i < len(array)-1:
                     vstr.append('\n')
@@ -631,7 +366,7 @@ class Ndarray(object):
         s = str(self.tolist())
         sl = len(self._shape)
         for d in range(1, sl):
-            s = s.replace(' '+'['*d, '\n'+' '*(sl+8-d)+'['*d)   # __:opov
+            s = s.replace(' '+'['*d, '\n'+' '*(sl+8-d)+'['*d)    # __:opov
         return 'Ndarray({}, dtype={})'.format(s, repr(self._dtype))
 
     def __len__(self):
@@ -645,11 +380,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] < other   # __:opov
+                ndarray_data[i] = data[i] < other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] < other_data[i]   # __:opov
+                ndarray_data[i] = data[i] < other_data[i]
         return ndarray
 
     def __le__(self, other):
@@ -660,11 +395,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] <= other  # __:opov
+                ndarray_data[i] = data[i] <= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] <= other_data[i]  # __:opov
+                ndarray_data[i] = data[i] <= other_data[i]
         return ndarray
     
     def __eq__(self, other):
@@ -675,11 +410,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] == other  # __:opov
+                ndarray_data[i] = data[i] == other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] == other_data[i]  # __:opov
+                ndarray_data[i] = data[i] == other_data[i]
         return ndarray
     
     def __ne__(self, other):
@@ -690,11 +425,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] != other  # __:opov
+                ndarray_data[i] = data[i] != other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] != other_data[i]  # __:opov
+                ndarray_data[i] = data[i] != other_data[i]
         return ndarray
     
     def __gt__(self, other):
@@ -705,11 +440,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] > other   # __:opov
+                ndarray_data[i] = data[i] > other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] > other_data[i]   # __:opov
+                ndarray_data[i] = data[i] > other_data[i]
         return ndarray
 
     def __ge__(self, other):
@@ -720,11 +455,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] >= other  # __:opov
+                ndarray_data[i] = data[i] >= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] >= other_data[i]  # __:opov
+                ndarray_data[i] = data[i] >= other_data[i]
         return ndarray
 
     def __add__(self, other):
@@ -733,11 +468,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] + other   # __:opov
+                ndarray_data[i] = data[i] + other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] + other_data[i]   # __:opov
+                ndarray_data[i] = data[i] + other_data[i]
         return ndarray
 
     def __sub__(self, other):
@@ -746,11 +481,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] - other   # __:opov
+                ndarray_data[i] = data[i] - other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] - other_data[i]   # __:opov
+                ndarray_data[i] = data[i] - other_data[i]
         return ndarray
 
     def __mul__(self, other):
@@ -759,11 +494,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] * other   # __:opov
+                ndarray_data[i] = data[i] * other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] * other_data[i]   # __:opov
+                ndarray_data[i] = data[i] * other_data[i]
         return ndarray
 
     def __div__(self, other):
@@ -775,11 +510,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] / other   # __:opov
+                ndarray_data[i] = data[i] / other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] / other_data[i]   # __:opov
+                ndarray_data[i] = data[i] / other_data[i]
         return ndarray
 
     def __floordiv__(self, other):
@@ -788,11 +523,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = _floor(data[i] / other)  # __:opov
+                ndarray_data[i] = _floor(data[i] / other)
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = _floor(data[i] / other_data[i]) # __:opov
+                ndarray_data[i] = _floor(data[i] / other_data[i])
         return ndarray
 
     def __divmod__(self, other):
@@ -804,11 +539,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] % other   # __:opov
+                ndarray_data[i] = data[i] % other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] % other_data[i]   # __:opov
+                ndarray_data[i] = data[i] % other_data[i]
         return ndarray
 
     def __pow__(self, other):
@@ -817,11 +552,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] ** other  # __:opov
+                ndarray_data[i] = data[i] ** other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] ** other_data[i]  # __:opov
+                ndarray_data[i] = data[i] ** other_data[i]
         return ndarray
 
     def __neg__(self):
@@ -829,7 +564,7 @@ class Ndarray(object):
         ndarray_data = ndarray._data
         data = self._data
         for i in range(len(data)):
-            ndarray_data[i] = -data[i]  # __:opov
+            ndarray_data[i] = -data[i]
         return ndarray
 
     def __pos__(self):
@@ -842,7 +577,7 @@ class Ndarray(object):
         data = self._data
         for i in range(len(data)):
             if data[i] < 0:
-                ndarray_data[i] = -data[i]  # __:opov
+                ndarray_data[i] = -data[i]
         return ndarray
 
     def __matmul__(self, other):
@@ -857,7 +592,7 @@ class Ndarray(object):
                 other_data = _other._data
                 result = 0
                 for i in range(len(data)):
-                    result += (data[i] * other_data[i])     # __:opov
+                    result += (data[i] * other_data[i])
                 return result
             else:
                 raise ValueError('incompatible array shapes for matmul')
@@ -873,7 +608,7 @@ class Ndarray(object):
                 d_len*=v
         else:
             raise ValueError('incompatible array shapes for matmul')
-        _data = self._data.__class__(d_len*n*p)
+        _data = __new__(self._typedarray[self._dtype](d_len*n*p))
         array = Ndarray(_data, self._dtype)
         # __pragma__ ('opov')
         array.setshape(tuple(d+(n,p)))
@@ -899,41 +634,41 @@ class Ndarray(object):
                 for j in range(p):
                     result = 0
                     for k in range(m):
-                        result += (_x_data[i*m+k] * _y_data[k*p+j])  # __:opov
-                    _array_data[i*p+j] = result     # __:opov
+                        result += (_x_data[i*m+k] * _y_data[k*p+j])
+                    _array_data[i*p+j] = result    # __:opov
         return array
 
     def __iadd__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] += other   # __:opov
+                data[i] += other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] += other_data[i]   # __:opov
+                data[i] += other_data[i]
         return self
 
     def __isub__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] -= other   # __:opov
+                data[i] -= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] -= other_data[i]   # __:opov
+                data[i] -= other_data[i]
         return self
 
     def __imul__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] *= other   # __:opov
+                data[i] *= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] *= other_data[i]   # __:opov
+                data[i] *= other_data[i]
         return self
 
     def __idiv__(self, other):
@@ -943,44 +678,44 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] /= other   # __:opov
+                data[i] /= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] /= other_data[i]   # __:opov
+                data[i] /= other_data[i]
         return self
 
     def __ifloordiv__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = _floor(data[i] / other)   # __:opov
+                data[i] = _floor(data[i] / other)
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = _floor(data[i] / other_data[i])   # __:opov
+                data[i] = _floor(data[i] / other_data[i])
         return self
 
     def __imod__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] %= other   # __:opov
+                data[i] %= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] %= other_data[i]   # __:opov
+                data[i] %= other_data[i]
         return self
 
     def __ipow__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] **= other   # __:opov
+                data[i] **= other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] **= other_data[i]   # __:opov
+                data[i] **= other_data[i]
         return self
 
     def __lshift__(self, other):
@@ -989,11 +724,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] << other   # __:opov
+                ndarray_data[i] = data[i] << other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] << other_data[i]   # __:opov
+                ndarray_data[i] = data[i] << other_data[i]
         return ndarray
 
     def __rshift__(self, other):
@@ -1002,11 +737,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] >> other   # __:opov
+                ndarray_data[i] = data[i] >> other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] >> other_data[i]   # __:opov
+                ndarray_data[i] = data[i] >> other_data[i]
         return ndarray
 
     def __and__(self, other):
@@ -1015,11 +750,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] & other   # __:opov
+                ndarray_data[i] = data[i] & other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] & other_data[i]   # __:opov
+                ndarray_data[i] = data[i] & other_data[i]
         return ndarray
 
     def __or__(self, other):
@@ -1028,11 +763,11 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] | other   # __:opov
+                ndarray_data[i] = data[i] | other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] | other_data[i]   # __:opov
+                ndarray_data[i] = data[i] | other_data[i]
         return ndarray
 
     def __xor__(self, other):
@@ -1041,66 +776,66 @@ class Ndarray(object):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                ndarray_data[i] = data[i] ^ other   # __:opov
+                ndarray_data[i] = data[i] ^ other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                ndarray_data[i] = data[i] ^ other_data[i]   # __:opov
+                ndarray_data[i] = data[i] ^ other_data[i]
         return ndarray
 
     def __ilshift__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = data[i] << other   # __:opov
+                data[i] = data[i] << other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = data[i] << other_data[i]   # __:opov
+                data[i] = data[i] << other_data[i]
         return self
 
     def __irshift__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = data[i] >> other   # __:opov
+                data[i] = data[i] >> other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = data[i] >> other_data[i]   # __:opov
+                data[i] = data[i] >> other_data[i]
         return self
 
     def __iand__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = data[i] & other   # __:opov
+                data[i] = data[i] & other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = data[i] & other_data[i]   # __:opov
+                data[i] = data[i] & other_data[i]
         return self
 
     def __ior__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = data[i] | other   # __:opov
+                data[i] = data[i] | other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = data[i] | other_data[i]   # __:opov
+                data[i] = data[i] | other_data[i]
         return self
 
     def __ixor__(self, other):
         data = self._data
         if not hasattr(other, '__iter__'):
             for i in range(len(data)):
-                data[i] = data[i] ^ other   # __:opov
+                data[i] = data[i] ^ other
         else:
             other_data = self._get_data(other)
             for i in range(len(data)):
-                data[i] = data[i] ^ other_data[i]   # __:opov
+                data[i] = data[i] ^ other_data[i]
         return self
 
     def __invert__(self):
@@ -1108,7 +843,7 @@ class Ndarray(object):
         ndarray_data = ndarray._data
         data = self._data
         for i in range(len(data)):
-            ndarray_data[i] = ~data[i]   # __:opov
+            ndarray_data[i] = ~data[i]
         return ndarray
 
     def _get_data(self, other):
@@ -1187,38 +922,42 @@ class Ndarray(object):
         Data argument can be a 1d/2d array or number used to set Ndarray elements, data used repetitively if consists of fewer elements than Ndarray.
         """
         if isinstance(data, (list,tuple)):
-            if isinstance(data[0], (list,tuple,TypedArray)):
-                data = [value for dat in data for value in dat]
-            dataLn = len(data)
-            data = data.getArray()
-        elif isinstance(data, (Ndarray,TypedArray)):
-            data = data.getArray()
+            if isinstance(data[0], (list,tuple)):
+                _data = [value for dat in data for value in dat]
+            else:
+                _data = data
+            dataLn = len(_data)
+        elif isinstance(data, Ndarray):
+            _data = data._data
+            dataLn = _data.length
+        elif istypedarray(data):
+            _data = data
             dataLn = data.length
         else:
-            for index in range(self._data._data.length):
-                self._data._data[index] = data
+            for index in range(self._data.length):
+                self._data[index] = data
             return None
-        if dataLn == self._data._data.length:
-            for index in range(self._data._data.length):
-                self._data._data[index]=data[index]
+        if dataLn == self._data.length:
+            for index in range(self._data.length):
+                self._data[index] = _data[index]
         else:
-            for index in range(self._data._data.length):
-                self._data._data[index]=data[index%dataLn]
+            for index in range(self._data.length):
+                self._data[index] = _data[index%dataLn]
         return None
 
     def fill(self, value):
         """
         Set array elements to value argument.
         """
-        for index in range(self._data._data.length):
-            self._data._data[index] = value
+        for index in range(self._data.length):
+            self._data[index] = value
         return None
 
     def copy(self):
         """
         Return copy of array.
         """
-        array = self._data.__class__(self._data)
+        array = __new__(self._typedarray[self._dtype](self._data))
         ndarray = Ndarray(array, self._dtype)
         ndarray._shape = self._shape
         ndarray._indices = self._indices
@@ -1238,8 +977,7 @@ class Ndarray(object):
         Return copy of array.
         Argument dtype is TypedArray data type.
         """
-        typedarray = self.__typedarray[self.__dtypes[dtype]]
-        array = typedarray(self._data)
+        array = __new__(self._typedarray[self._dtypes[dtype]](self._data))
         ndarray = Ndarray(array, dtype)
         ndarray._shape = self._shape
         ndarray._indices = self._indices
@@ -1250,7 +988,7 @@ class Ndarray(object):
         Return view of array.
         """
         subarray = self._data.subarray(0)
-        array = Ndarray(subarray)
+        array = Ndarray(subarray, self._dtype)
         array._shape = self._shape
         array._indices = self._indices
         return array
@@ -1261,13 +999,11 @@ class Ndarray(object):
         Arguments are the axis to swap.
         Return view of array with axes changed.
         """
-        array = Ndarray(self._data, self._dtype)
+        subarray = self._data.subarray(0)
+        array = Ndarray(subarray, self._dtype)
         shape = list(self._shape)
         shape[axis1], shape[axis2] = shape[axis2], shape[axis1]
-        array._shape = tuple(shape)
-        indices = list(self._indices)
-        indices[axis1], indices[axis2] = indices[axis2], indices[axis1]
-        array._indices = tuple(indices)
+        array.setshape(tuple(shape))
         return array
 
     def tolist(self):
@@ -1275,7 +1011,7 @@ class Ndarray(object):
         Return array as a list.
         """
         def to_list(array, l):
-            _array = array[0]   # __:opov
+            _array = array[0]    # __:opov
             if hasattr(_array, '__iter__'):
                 if len(l) == 0:
                     _l = l
@@ -1294,17 +1030,19 @@ class Ndarray(object):
         """
         Return JavaScript TypedArray.
         """
-        return self._data.getArray()
+        return self._data
 
 
-class NP(object):
+ndarray = Ndarray
+array = Ndarray
+
+
+class NP:
 
     def zeros(self, size, dtype):
         """
         Return Ndarray of size and dtype with zeroed values.
         """
-        if dtype == 'i':
-            dtype = 3
         return Ndarray(size, dtype)
 
     def swapaxes(self, array, axis1, axis2):
@@ -1317,7 +1055,7 @@ class NP(object):
         """
         Return Ndarray set with array extended with values.
         """
-        if isinstance(values[0], (list,tuple,TypedArray)):
+        if isinstance(values[0], (list,tuple)):
             values = [value for dat in values for value in dat]
         newarray = Ndarray(len(array)+len(values), array._dtype)
         newarray._data.set(array._data)
@@ -1327,7 +1065,7 @@ class NP(object):
 np = NP()
 
 
-class ImageData(object):
+class ImageData:
 
     def __init__(self, imagedata):
         """
@@ -1335,11 +1073,7 @@ class ImageData(object):
         The argument required is the ImageData instance to be accessed.
         """
         self._imagedata = imagedata
-        if TypedArray.__obj['Uint8ClampedArray'] != None:
-            self.data = Uint8ClampedArray()
-        else:
-            self.data = CanvasPixelArray()
-        self.data._data = imagedata.data
+        self.data = Uint8ClampedArray(imagedata.data)
         self.width = imagedata.width
         self.height = imagedata.height
 
@@ -1358,10 +1092,7 @@ class ImageMatrix(Ndarray):
         The argument required is the ImageData instance to be accessed.
         """
         self._imagedata = ImageData(imagedata)
-        if isinstance(self._imagedata.data, Uint8ClampedArray):
-            Ndarray.__init__(self, self._imagedata.data, 'uint8c')
-        else:
-            Ndarray.__init__(self, self._imagedata.data, 'uint8')
+        Ndarray.__init__(self, self._imagedata.data, 'uint8c')
         self.setshape(self._imagedata.height,self._imagedata.width,4)
 
     def getWidth(self):
@@ -1382,7 +1113,7 @@ class ImageMatrix(Ndarray):
         The index arguement references the 2D array element.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        return (self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3])   # __:opov
+        return (self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3])
 
     def setPixel(self, index, value):
         """
@@ -1390,7 +1121,7 @@ class ImageMatrix(Ndarray):
         The arguements index references the 2D array element and value is pixel RGBA.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3] = value[0], value[1], value[2], value[3]   # __:opov
+        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3] = value[0], value[1], value[2], value[3]
         return None
 
     def getPixelRGB(self, index):
@@ -1399,7 +1130,7 @@ class ImageMatrix(Ndarray):
         The index arguement references the 2D array element.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        return (self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2])  # __:opov
+        return (self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2])
 
     def setPixelRGB(self, index, value):
         """
@@ -1407,7 +1138,7 @@ class ImageMatrix(Ndarray):
         The arguements index references the 2D array element and value is pixel RGB.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2] = value[0], value[1], value[2]    # __:opov
+        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2] = value[0], value[1], value[2]
         return None
 
     def getPixelAlpha(self, index):
@@ -1416,7 +1147,7 @@ class ImageMatrix(Ndarray):
         The index arguement references the 2D array element.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        return self._imagedata.data[i+3]    # __:opov
+        return self._imagedata.data[i+3]
 
     def setPixelAlpha(self, index, value):
         """
@@ -1424,7 +1155,7 @@ class ImageMatrix(Ndarray):
         The arguements index references the 2D array element and value is pixel alpha.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        self._imagedata.data[i+3] = value   # __:opov
+        self._imagedata.data[i+3] = value
         return None
 
     def getPixelInteger(self, index):
@@ -1433,7 +1164,7 @@ class ImageMatrix(Ndarray):
         The index arguement references the 2D array element.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        return self._imagedata.data[i]<<16 | self._imagedata.data[i+1]<<8 | self._imagedata.data[i+2] | self.imagedata.data[i+3]<<24    # __:opov
+        return self._imagedata.data[i]<<16 | self._imagedata.data[i+1]<<8 | self._imagedata.data[i+2] | self.imagedata.data[i+3]<<24
 
     def setPixelInteger(self, index, value):
         """
@@ -1441,7 +1172,7 @@ class ImageMatrix(Ndarray):
         The arguements index references the 2D array element and value is pixel color.
         """
         i = (index[0]*self._indices[0]) + (index[1]*4)
-        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3] = value>>16 & 0xff, value>>8 & 0xff, value & 0xff, value>>24 & 0xff    # __:opov
+        self._imagedata.data[i], self._imagedata.data[i+1], self._imagedata.data[i+2], self._imagedata.data[i+3] = value>>16 & 0xff, value>>8 & 0xff, value & 0xff, value>>24 & 0xff
         return None
 
     def getImageData(self):
@@ -1451,7 +1182,7 @@ class ImageMatrix(Ndarray):
         return self._imagedata.getImageData()
 
 
-class BitSet(object):
+class BitSet:
 
     """
     BitSet provides a bitset object to use in a Python-to-JavaScript application. The object stores data in a JavaScript Uint8Array 8-bit typedarray. BitSet16 and BitSet32 stores data in Uint16Array (16-bit) and Uint32Array (32-bit) typedarray. The BitSet will dynamically expand to hold the bits required, an optional width argument define number of bits the BitSet instance will initially hold.
@@ -1459,7 +1190,7 @@ class BitSet(object):
 
     _bit = 8
     _bitmask = None
-    __typedarray = Uint8Array
+    _typedarray = window.Uint8Array
 
     def __init__(self, width=None):
         if self._bitmask is None:
@@ -1468,7 +1199,7 @@ class BitSet(object):
             self._width = abs(width)
         else:
             self._width = self._bit
-        self._data = self.__typedarray( _ceil(self._width/(self._bit*1.0)) )
+        self._data = __new__(self._typedarray(_ceil(self._width/(self._bit*1.0))))
 
     def __str__(self):
         v = {True:'1', False:'0'}
@@ -1519,7 +1250,7 @@ class BitSet(object):
                 else:
                     return None
         if toIndex is None:
-            return bool( self._data[ int(index/self._bit) ] & self._bitmask[ index%self._bit ] )    # __:opov
+            return bool(self._data[ int(index/self._bit) ] & self._bitmask[ index%self._bit ])
         else:
             size = toIndex-index
             if size > 0:
@@ -1528,7 +1259,7 @@ class BitSet(object):
                 if toIndex > self._width:
                     toIndex = self._width
                 for i in range(index, toIndex):
-                    bitset.set(ix, bool( self._data[ int(i/self._bit) ] & self._bitmask[ i%self._bit ] ))   # __:opov
+                    bitset.set(ix, bool(self._data[ int(i/self._bit) ] & self._bitmask[ i%self._bit ]))
                     ix += 1
                 return bitset
             else:
@@ -1545,9 +1276,9 @@ class BitSet(object):
             else:
                 return
         if value:
-            self._data[ int(index/self._bit) ] = self._data[ int(index/self._bit) ] | self._bitmask[ index%self._bit ]  # __:opov
+            self._data[int(index/self._bit)] = self._data[ int(index/self._bit) ] | self._bitmask[ index%self._bit ]
         else:
-            self._data[ int(index/self._bit) ] = self._data[ int(index/self._bit) ] & ~(self._bitmask[ index%self._bit ])   # __:opov
+            self._data[ int(index/self._bit) ] = self._data[ int(index/self._bit) ] & ~(self._bitmask[ index%self._bit ])
         return None
 
     def fill(self, index=None, toIndex=None):
@@ -1572,14 +1303,14 @@ class BitSet(object):
         """
         if index is None:
             for i in range(len(self._data)):
-                self._data[i] = 0   # __:opov
+                self._data[i] = 0
         else:
             if toIndex is None:
                 self.set(index, 0)
             else:
                 if index == 0 and toIndex == self._width:
                     for dat in range(len(self._data)):
-                        self._data[dat] = 0     # __:opov
+                        self._data[dat] = 0
                 else:
                     for i in range(index, toIndex):
                         self.set(i, 0)
@@ -1597,7 +1328,7 @@ class BitSet(object):
                 toIndex = self._width
             if index == 0 and toIndex == self._width:
                 for dat in range(len(self._data)):
-                    self._data[dat] = ~self._data[dat]  # __:opov
+                    self._data[dat] = ~self._data[dat]
             else:
                 for i in range(index, toIndex):
                     self.set(i, not self.get(i))
@@ -1618,7 +1349,7 @@ class BitSet(object):
         Return True if bitsets intersect, otherwise return False.
         """
         for dat in range(len(bitset._data)):
-            intersect = bitset._data[dat] & self._data[dat]     # __:opov
+            intersect = bitset._data[dat] & self._data[dat]
             if intersect:
                 return True
         return False
@@ -1629,7 +1360,7 @@ class BitSet(object):
         """
         data = min(len(self._data), len(bitset._data))
         for dat in range(data):
-            self._data[dat] = self._data[dat] & bitset._data[dat]   # __:opov
+            self._data[dat] = self._data[dat] & bitset._data[dat]
 
     def orSet(self, bitset):
         """
@@ -1637,7 +1368,7 @@ class BitSet(object):
         """
         data = min(len(self._data), len(bitset._data))
         for dat in range(data):
-            self._data[dat] = self._data[dat] | bitset._data[dat]   # __:opov
+            self._data[dat] = self._data[dat] | bitset._data[dat]
 
     def xorSet(self, bitset):
         """
@@ -1645,7 +1376,7 @@ class BitSet(object):
         """
         data = min(len(self._data), len(bitset._data))
         for dat in range(data):
-            self._data[dat] = self._data[dat] ^ bitset._data[dat]   # __:opov
+            self._data[dat] = self._data[dat] ^ bitset._data[dat]
 
     def resize(self, width):
         """
@@ -1654,7 +1385,7 @@ class BitSet(object):
         if width > self._width:
             self._width = width
             if self._width > len(self._data) * self._bit:
-                array = self.__typedarray( _ceil(self._width/(self._bit*1.0)) )
+                array = __new__(self._typedarray(_ceil(self._width/(self._bit*1.0))))
                 array.set(self._data)
                 self._data = array
         elif width < self._width:
@@ -1662,7 +1393,7 @@ class BitSet(object):
                 width = len(self)
             self._width = width
             if self._width <= len(self._data) * self._bit - self._bit:
-                array = self.__typedarray( _ceil(self._width/(self._bit*1.0)) )
+                array = __new__(self._typedarray(_ceil(self._width/(self._bit*1.0))))
                 array.set(self._data.subarray(0,_ceil(self._width/(self._bit*1.0))))
                 self._data = array
 
@@ -1687,7 +1418,7 @@ class BitSet(object):
         Return a copy of the BitSet.
         """
         new_bitset = self.__class__(1)
-        data = self.__typedarray(self._data)
+        data = __new__(self._typedarray(self._data))
         new_bitset._data = data
         new_bitset._width = self._width
         return new_bitset
@@ -1699,7 +1430,7 @@ class BitSet16(BitSet):
     """
     _bit = 16
     _bitmask = None
-    __typedarray = Uint16Array
+    _typedarray = window.Uint16Array
 
     def __init__(self, width=None):
         BitSet.__init__(self, width)
@@ -1711,15 +1442,37 @@ class BitSet32(BitSet):
     """
     _bit = 32
     _bitmask = None
-    __typedarray = Uint32Array
+    _typedarray = window.Uint32Array
 
     def __init__(self, width=None):
         BitSet.__init__(self, width)
 
 
-def typeOf(obj):
+# __pragma__('noalias', 'name')
+
+_typedarray = set('Uint8ClampedArray',
+                  'Uint8Array',
+                  'Uint16Array',
+                  'Uint32Array',
+                  'Int8Array',
+                  'Int16Array',
+                  'Int32Array',
+                  'Float32Array',
+                  'Float64Array')
+
+TypedArray = Object.getPrototypeOf(window.Int32Array)
+
+def istypedarray(obj):
     """
-    Return typeof obj.
+    Check if obj is instanceof TypedArray.
     """
-    return typeof(obj)
+    if obj.name in _typedarray:
+        return __pragma__('js', {}, 'obj.name instanceof TypedArray;')
+    return __pragma__('js', {}, 'obj instanceof TypedArray;')
+
+def isinstanceof(obj, classobj):
+    """
+    Check if obj is instanceof classobj.
+    """
+    return __pragma__('js', {}, 'obj instanceof classobj;')
 

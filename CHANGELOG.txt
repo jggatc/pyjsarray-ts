@@ -1,3 +1,9 @@
+0.54_dev
+-add statements for python env.
+-revise JS object instantiate statement for opov issue.
+-refactor pyjsarray for performance.
+
 0.54    2021-07-16
 -revise pyjsarray module for transcrypt.
+-revise JS object instantiate statement for opov issue.
 
