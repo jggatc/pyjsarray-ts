@@ -33,6 +33,10 @@ class window:
     Uint8ClampedArray = Uint8Array = Uint16Array = Uint32Array = None
     Int8Array = Int16Array = Int32Array = None
     Float32Array = Float64Array = None
+
+class Object:
+    def getPrototypeOf(*args):
+        return None
 # __pragma__ ('noskip')
 
 
