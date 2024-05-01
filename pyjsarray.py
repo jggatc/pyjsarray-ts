@@ -22,7 +22,10 @@
 #PyjsArray version 0.54
 #Project Site: https://gatc.ca/
 
-from math import ceil as _ceil, floor as _floor
+from math import ceil as _ceil, floor as _floor, sqrt as _sqrt
+from math import log as _log, sin as _sin, cos as _cos, pi as _pi
+from random import random as _random, randint as _randint
+from random import choice as _choice, shuffle as _shuffle
 
 
 # __pragma__ ('skip')
@@ -1075,11 +1078,57 @@ array = Ndarray
 
 class NP:
 
-    def zeros(self, size, dtype):
+    def __init__(self):
+        self.uint8c = 'uint8c'
+        self.int8 = 'int8'
+        self.uint8 = 'uint8'
+        self.int16 = 'int16'
+        self.uint16 = 'uint16'
+        self.int32 = 'int32'
+        self.uint32 = 'uint32'
+        self.float32 = 'float32'
+        self.float64 = 'float64'
+        self.random = None
+
+    def array(self, obj, dtype=None):
+        """
+        Return Ndarray from an obj iterable. If optional dtype is not provided,
+        an an appropriate array will be inferred.
+        """
+        if dtype is None:
+            dtype = self._get_dtype(obj)
+        return Ndarray(obj, dtype)
+
+    def zeros(self, shape, dtype='float64'):
         """
         Return Ndarray of size and dtype with zeroed values.
         """
-        return Ndarray(size, dtype)
+        return Ndarray(shape, dtype)
+
+    def ones(self, shape, dtype='float64'):
+        """
+        Return Ndarray of shape and optional dtype with one values.
+        """
+        array = Ndarray(shape, dtype)
+        array.set(1)
+        return array
+
+    # __pragma__ ('kwargs')
+    def arange(self, start=0, stop=None, step=None, dtype=None):
+        """
+        Return Ndarray in range start to stop in step interval. If optional
+        dtype is not provided, an an appropriate array will be inferred.
+        """
+        if stop is None:
+            stop = start
+            start = 0
+        if step is None:
+            step = 1
+        array = range(start, stop, step)
+        if dtype is None:
+            dtype = self._get_dtype(array)
+        return Ndarray(array, dtype)
+    # __pragma__ ('nokwargs')
 
     def swapaxes(self, array, axis1, axis2):
         """
@@ -1117,8 +1166,151 @@ class NP:
         """
         return dict(Ndarray._opts)
 
+    def _lflatten(self, obj):
+        for el in obj:
+            if hasattr(el, '__iter__'):
+                yield from self._lflatten(el)
+            else:
+                yield el
+
+    def _get_dtype(self, obj):
+        dtype = 'int32'
+        for value in self._lflatten(obj):
+            if not (Number.isFinite(value) and
+                    Number.isInteger(value)):
+                if typeof(value) != 'boolean':
+                    dtype = 'float64'
+                    break
+        return dtype
+
 
 np = NP()
+
+
+class Random:
+
+    def __init__(self):
+        self._gauss_next = None
+        self._pi2 = _pi * 2
+
+    def normal(self, mu, sigma, size=None):
+        """
+        Sample from gaussian distribution of mean mu and standard deviation sigma.
+        Return as an array defined by size or a single value if None.
+        """
+        if size is None:
+            return self._gauss(mu, sigma)
+        array = Ndarray(size, 'float64')
+        data = array._data
+        gauss = self._gauss
+        for i in range(data.length):
+            data[i] = gauss(mu, sigma)
+        return array
+
+    def _gauss(self, mu, sigma):
+        z = self._gauss_next
+        self._gauss_next = None
+        if z is None:
+            x2pi = _random() * self._pi2
+            g2rad = _sqrt(-2.0 * _log(1.0 - _random()))
+            z = _cos(x2pi) * g2rad
+            self._gauss_next = _sin(x2pi) * g2rad
+        return mu + z * sigma
+
+    def random(self, size=None):
+        """
+        Sample from random values between 0.0 and 1.0.
+        Return as an array defined by size or a single value if None.
+        """
+        if size is None:
+            return _random()
+        array = Ndarray(size, 'float64')
+        data = array._data
+        for i in range(data.length):
+            data[i] = _random()
+        return array
+
+    # __pragma__ ('kwargs')
+    def randint(self, low, high=None, size=None, dtype='int32'):
+        """
+        Sample from random integers between low and high.
+        If high is None, values will be 0 to low.
+        Return as an array defined by size or a single value if None.
+        """
+        if high is None:
+            a = 0
+            b = low
+        else:
+            a = low
+            b = high
+        if size is None:
+            return _randint(a, b)
+        array = Ndarray(size, dtype)
+        data = array._data
+        for i in range(data.length):
+            data[i] = _randint(a, b)
+        return array
+    # __pragma__ ('nokwargs')
+
+    def choice(self, seq, size=None):
+        """
+        Sample from random values from seq iterable.
+        If seq is an int, then values from range(seq).
+        Return as an array defined by size or a single value if None.
+        """
+        if Number.isInteger(seq):
+            _seq = range(seq)
+        else:
+            _seq = seq
+        if size is None:
+            return _choice(_seq)
+        dtype = np._get_dtype(_seq)
+        array = Ndarray(size, dtype)
+        data = array._data
+        for i in range(data.length):
+            data[i] = _choice(_seq)
+        return array
+
+    def shuffle(self, array):
+        """
+        Shuffle first axis of array.
+        """
+        if not hasattr(array, '_shape'):
+            _shuffle(array)
+            return None
+        if len(array._shape) == 1:
+            _shuffle(array._data)
+        else:
+            for i in range(len(array)-1, 0, -1):
+                j = _randint(0, i)
+                if i == j:
+                    continue
+                # __pragma__ ('opov')
+                temp = array[i].copy()
+                array[i] = array[j]
+                array[j] = temp
+                # __pragma__ ('noopov')
+        return None
+
+    def permutation(self, seq):
+        """
+        Return array with permutated values from seq iterable.
+        If seq is an int, then values from range(seq).
+        """
+        if Number.isInteger(seq):
+            _seq = range(seq)
+        else:
+            _seq = seq
+        if not hasattr(_seq, '_shape'):
+            dtype = np._get_dtype(_seq)
+            array = Ndarray(_seq, dtype)
+        else:
+            array = _seq.copy()
+        self.shuffle(array)
+        return array
+
+
+np.random = Random()
 
 
 class ImageData:
