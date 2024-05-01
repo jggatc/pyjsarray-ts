@@ -23,15 +23,13 @@
 #Project Site: https://gatc.ca/
 
 from math import ceil as _ceil, floor as _floor
+
+
 # __pragma__ ('skip')
-import sys
-
-def _compat():
-    global range
-    range = xrange
-
-if sys.version_info < (3,):
-    _compat()
+class window:
+    Uint8ClampedArray = Uint8Array = Uint16Array = Uint32Array = None
+    Int8Array = Int16Array = Int32Array = None
+    Float32Array = Float64Array = None
 # __pragma__ ('noskip')
 
 
