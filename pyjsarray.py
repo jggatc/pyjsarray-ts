@@ -911,8 +911,6 @@ class Ndarray:
 
     def matmul(self, other):
         """
-        Matrix multiplication.
-        Argument is an int or array.
         Return matrix multiplied array.
         """
         return self.__matmul__(other)
@@ -1087,7 +1085,7 @@ class NP:
 
     def zeros(self, shape, dtype='float64'):
         """
-        Return Ndarray of size and dtype with zeroed values.
+        Return Ndarray of shape and optional dtype with zeroed values.
         """
         return Ndarray(shape, dtype)
 
