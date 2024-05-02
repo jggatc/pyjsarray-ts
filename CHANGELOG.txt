@@ -5,6 +5,7 @@
 -revise pyjsarray ndarray indexing.
 -revise ndarray str method.
 -add ndarray constructor methods.
+-add ndarray stats methods.
 
 0.54    2021-07-16
 -revise pyjsarray module for transcrypt.

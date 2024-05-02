@@ -915,6 +915,225 @@ class Ndarray:
         """
         return self.__matmul__(other)
 
+    # __pragma__ ('kwargs')
+    def max(self, axis=None):
+        """
+        Return maximum of array or of given axis.
+        """
+        if axis is None:
+            return max(self._data)
+        if axis > len(self._shape)-1:
+            raise IndexError('axis out of bound')
+        shape = tuple([i for index, i in enumerate(self._shape)
+                       if index != axis])
+        result = Ndarray(shape, self._dtype)
+        result.fill(min(self._data))
+        return self._max(self, axis, 0, self._shape, 0, result)
+    # __pragma__ ('nokwargs')
+
+    def _max(self, array, axis, curr_axis, shape, dim, result):
+        if curr_axis == axis:
+            if axis != len(shape)-1:
+                res_dat = result._data
+                for i in range(len(array)):
+                    arr_dat = array[i]._data    # __:opov
+                    for j in range(result._data.length):
+                        if res_dat[j] < arr_dat[j]:
+                            res_dat[j] = arr_dat[j]
+            else:
+                res_dat = result._data
+                arr_dat = array._data
+                for i in range(len(array)):
+                    if res_dat[dim] < arr_dat[i]:
+                        res_dat[dim] = arr_dat[i]
+        elif curr_axis < len(shape):
+            if len(result._shape) > 1:
+                for dim in range(shape[curr_axis]):
+                    self._max(array[dim], axis, curr_axis+1, shape, dim, result[dim])    # __:opov
+            else:
+                for dim in range(shape[curr_axis]):
+                    self._max(array[dim], axis, curr_axis+1, shape, dim, result)    # __:opov
+        return result
+
+    # __pragma__ ('kwargs')
+    def min(self, axis=None):
+        """
+        Return minimum of array or of given axis.
+        """
+        if axis is None:
+            return min(self._data)
+        if axis > len(self._shape)-1:
+            raise IndexError('axis out of bound')
+        shape = tuple([i for index, i in enumerate(self._shape)
+                       if index != axis])
+        result = Ndarray(shape, self._dtype)
+        result.fill(max(self._data))
+        return self._min(self, axis, 0, self._shape, 0, result)
+    # __pragma__ ('nokwargs')
+
+    def _min(self, array, axis, curr_axis, shape, dim, result):
+        if curr_axis == axis:
+            if axis != len(shape)-1:
+                res_dat = result._data
+                for i in range(len(array)):
+                    arr_dat = array[i]._data    # __:opov
+                    for j in range(result._data.length):
+                        if res_dat[j] > arr_dat[j]:
+                            res_dat[j] = arr_dat[j]
+            else:
+                res_dat = result._data
+                arr_dat = array._data
+                for i in range(len(array)):
+                    if res_dat[dim] > arr_dat[i]:
+                        res_dat[dim] = arr_dat[i]
+        elif curr_axis < len(shape):
+            if len(result._shape) > 1:
+                for dim in range(shape[curr_axis]):
+                    self._min(array[dim], axis, curr_axis+1, shape, dim, result[dim])    # __:opov
+            else:
+                for dim in range(shape[curr_axis]):
+                    self._min(array[dim], axis, curr_axis+1, shape, dim, result)    # __:opov
+        return result
+
+    # __pragma__ ('kwargs')
+    def sum(self, axis=None):
+        """
+        Return sum of array or of given axis.
+        """
+        if axis is None:
+            return sum(self._data)
+        if axis > len(self._shape)-1:
+            raise IndexError('axis out of bound')
+        shape = tuple([i for index, i in enumerate(self._shape)
+                       if index != axis])
+        result = Ndarray(shape, self._dtype)
+        return self._sum(self, axis, 0, self._shape, 0, result)
+    # __pragma__ ('nokwargs')
+
+    def _sum(self, array, axis, curr_axis, shape, dim, result):
+        if curr_axis == axis:
+            if axis != len(shape)-1:
+                res_dat = result._data
+                for i in range(len(array)):
+                    arr_dat = array[i]._data    # __:opov
+                    for j in range(result._data.length):
+                        res_dat[j] += arr_dat[j]
+            else:
+                res_dat = result._data
+                arr_dat = array._data
+                for i in range(len(array)):
+                    res_dat[dim] += arr_dat[i]
+        elif curr_axis < len(shape):
+            if len(result._shape) > 1:
+                for dim in range(shape[curr_axis]):
+                    self._sum(array[dim], axis, curr_axis+1, shape, dim, result[dim])    # __:opov
+            else:
+                for dim in range(shape[curr_axis]):
+                    self._sum(array[dim], axis, curr_axis+1, shape, dim, result)    # __:opov
+        return result
+
+    # __pragma__ ('kwargs')
+    def mean(self, axis=None):
+        """
+        Return mean of array or of given axis.
+        """
+        if axis is None:
+            return sum(self._data) / self._data.length
+        if axis > len(self._shape)-1:
+            raise IndexError('axis out of bound')
+        shape = tuple([i for index, i in enumerate(self._shape)
+                       if index != axis])
+        result = Ndarray(shape, 'float64')
+        return self._mean(self, axis, 0, self._shape, 0, result)
+    # __pragma__ ('nokwargs')
+
+    def _mean(self, array, axis, curr_axis, shape, dim, result):
+        if curr_axis == axis:
+            if axis != len(shape)-1:
+                res = result._data
+                arr_len = len(array)
+                for i in range(arr_len):
+                    arr = array[i]._data    # __:opov
+                    for j in range(result._data.length):
+                        res[j] += arr[j]
+                for j in range(result._data.length):
+                    res[j] /= arr_len
+            else:
+                res = result._data
+                arr = array._data
+                arr_len = len(array)
+                for i in range(arr_len):
+                    res[dim] += arr[i]
+                res[dim] /= arr_len
+        elif curr_axis < len(shape):
+            if len(result._shape) > 1:
+                for dim in range(shape[curr_axis]):
+                    self._mean(array[dim], axis, curr_axis+1, shape, dim, result[dim])    # __:opov
+            else:
+                for dim in range(shape[curr_axis]):
+                    self._mean(array[dim], axis, curr_axis+1, shape, dim, result)    # __:opov
+        return result
+
+    # __pragma__ ('kwargs')
+    def var(self, axis=None):
+        """
+        Return variance of array or of given axis.
+        """
+        if axis is None:
+            mean = sum(self._data) / self._data.length
+            return sum((val-mean)**2 for val in self._data) / self._data.length
+        mean = self.mean(axis)
+        shape = tuple([i for index, i in enumerate(self._shape)
+                       if index != axis])
+        result = Ndarray(shape, 'float64')
+        return self._var(self, axis, 0, self._shape, 0, mean, result)
+    # __pragma__ ('nokwargs')
+
+    def _var(self, array, axis, curr_axis, shape, dim, mean, result):
+        if curr_axis == axis:
+            if axis != len(shape)-1:
+                mean_dat = mean._data
+                res_dat = result._data
+                arr_len = len(array)
+                for i in range(arr_len):
+                    arr_dat = array[i]._data    # __:opov
+                    for j in range(result._data.length):
+                        res_dat[j] += (arr_dat[j]-mean_dat[j])**2
+                for j in range(result._data.length):
+                    res_dat[j] /= arr_len
+            else:
+                mean_dat = mean._data
+                arr_dat = array._data
+                res_dat = result._data
+                arr_len = len(array)
+                for i in range(arr_len):
+                    res_dat[dim] += (arr_dat[i]-mean_dat[dim])**2
+                res_dat[dim] /= arr_len
+        elif curr_axis < len(shape):
+            if len(result._shape) > 1:
+                for dim in range(shape[curr_axis]):
+                    self._var(array[dim], axis, curr_axis+1, shape, dim, mean[dim], result[dim])    # __:opov
+            else:
+                for dim in range(shape[curr_axis]):
+                    self._var(array[dim], axis, curr_axis+1, shape, dim, mean, result)    # __:opov
+        return result
+
+    # __pragma__ ('kwargs')
+    def std(self, axis=None):
+        """
+        Return standard deviation of array or of given axis.
+        """
+        if axis is None:
+            mean = sum(self._data) / self._data.length
+            return (sum((val-mean)**2 for val in self._data)
+                    / self._data.length)**0.5
+        result = self.var(axis)
+        res_dat = result._data
+        for i in range(result._data.length):
+            res_dat[i] **= 0.5
+        return result
+    # __pragma__ ('nokwargs')
+
     def reshape(self, dim):
         """
         Return view of array with new shape.
