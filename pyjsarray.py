@@ -1308,13 +1308,11 @@ class Ndarray:
         return self._data
 
 
-ndarray = Ndarray
-array = Ndarray
-
-
 class NP:
 
     def __init__(self):
+        self.ndarray = Ndarray
+        self.random = _Random()
         self.uint8c = 'uint8c'
         self.int8 = 'int8'
         self.uint8 = 'uint8'
@@ -1324,7 +1322,6 @@ class NP:
         self.uint32 = 'uint32'
         self.float32 = 'float32'
         self.float64 = 'float64'
-        self.random = None
 
     def array(self, obj, dtype=None):
         """
@@ -1432,10 +1429,7 @@ class NP:
         return dtype
 
 
-np = NP()
-
-
-class Random:
+class _Random:
 
     def __init__(self):
         self._gauss_next = None
@@ -1558,7 +1552,9 @@ class Random:
         return array
 
 
-np.random = Random()
+np = NP()
+ndarray = Ndarray
+array = Ndarray
 
 
 class ImageData:
