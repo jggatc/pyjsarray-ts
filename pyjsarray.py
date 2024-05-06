@@ -119,15 +119,15 @@ class Ndarray:
                    'float32': window.Float32Array,
                    'float64': window.Float64Array}
 
-    _dtypes = {'uint8c':'uint8c', 'x':'uint8c', 0:'uint8c',
-               'int8':'int8', 'b':'int8', 4:'int8',
-               'uint8':'uint8', 'B':'uint8', 1:'uint8',
-               'int16':'int16', 'h':'int16', 5:'int16',
-               'uint16':'uint16', 'H':'uint16', 2:'uint16',
-               'int32':'int32', 'i':'int32', 6:'int32',
-               'uint32':'uint32', 'I':'uint32', 3:'uint32',
-               'float32':'float32', 'f':'float32', 7:'float32',
-               'float64':'float64', 'd':'float64', 8:'float64'}
+    _dtypes = {'uint8c':'uint8c', 'x':'uint8c',
+               'int8':'int8', 'b':'int8',
+               'uint8':'uint8', 'B':'uint8',
+               'int16':'int16', 'h':'int16',
+               'uint16':'uint16', 'H':'uint16',
+               'int32':'int32', 'i':'int32',
+               'uint32':'uint32', 'I':'uint32',
+               'float32':'float32', 'f':'float32',
+               'float64':'float64', 'd':'float64'}
 
     _opts = {'precision':4, 'nanstr':'nan', 'infstr':'inf'}
 
@@ -217,6 +217,10 @@ class Ndarray:
     @shape.setter
     def shape(self, val):
         self.setshape(val)
+
+    @property
+    def dtype(self):
+        return self._dtype
 
     def _lflatten(self, l):
         for el in l:
