@@ -1213,8 +1213,7 @@ class Ndarray:
             _data = data
             dataLn = data.length
         else:
-            for index in range(self._data.length):
-                self._data[index] = data
+            self._data.fill(data)
             return None
         if dataLn == self._data.length:
             for index in range(self._data.length):
@@ -1228,8 +1227,7 @@ class Ndarray:
         """
         Set array elements to value argument.
         """
-        for index in range(self._data.length):
-            self._data[index] = value
+        self._data.fill(value)
         return None
 
     def copy(self):
@@ -1347,7 +1345,7 @@ class NP:
         Return Ndarray of shape and optional dtype with one values.
         """
         array = Ndarray(shape, dtype)
-        array.set(1)
+        array.fill(1)
         return array
 
     # __pragma__ ('kwargs')
