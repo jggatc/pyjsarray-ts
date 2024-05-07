@@ -1365,6 +1365,24 @@ class NP:
         return Ndarray(array, dtype)
     # __pragma__ ('nokwargs')
 
+    # __pragma__ ('kwargs')
+    def linspace(self, start, stop, num=50, endpoint=True, dtype='float64'):
+        """
+        Return Ndarray of evenly spaced values from start to stop.
+        Optional arguments are num, endpoint, and dtype.
+        """
+        if endpoint:
+            if num == 1:
+                array = [start]
+            else:
+                step = (stop-start) / (num-1)
+                array = [start + step * i for i in range(num)]
+        else:
+            step = (stop-start) / num
+            array = [start + step * i for i in range(num)]
+        return Ndarray(array, dtype)
+    # __pragma__ ('nokwargs')
+
     def swapaxes(self, array, axis1, axis2):
         """
         Return array with axes swapped.
