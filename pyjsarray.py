@@ -131,6 +131,7 @@ class Ndarray:
 
     _opts = {'precision':4, 'nanstr':'nan', 'infstr':'inf'}
 
+    # __pragma__ ('kwargs')
     def __init__(self, dim, dtype='float64'):
         """
         Generate an N-dimensional array of TypedArray data.
@@ -179,6 +180,7 @@ class Ndarray:
             self._data = dim
             self._shape = (dim.length,)
             self._indices = (self._shape[0],)
+    # __pragma__ ('nokwargs')
 
     def getshape(self):
         """
@@ -1325,6 +1327,7 @@ class NP:
         self.float32 = 'float32'
         self.float64 = 'float64'
 
+    # __pragma__ ('kwargs')
     def array(self, obj, dtype=None):
         """
         Return Ndarray from an obj iterable. If optional dtype is not provided,
@@ -1333,13 +1336,17 @@ class NP:
         if dtype is None:
             dtype = self._get_dtype(obj)
         return Ndarray(obj, dtype)
+    # __pragma__ ('nokwargs')
 
+    # __pragma__ ('kwargs')
     def zeros(self, shape, dtype='float64'):
         """
         Return Ndarray of shape and optional dtype with zeroed values.
         """
         return Ndarray(shape, dtype)
+    # __pragma__ ('nokwargs')
 
+    # __pragma__ ('kwargs')
     def ones(self, shape, dtype='float64'):
         """
         Return Ndarray of shape and optional dtype with one values.
@@ -1347,6 +1354,7 @@ class NP:
         array = Ndarray(shape, dtype)
         array.fill(1)
         return array
+    # __pragma__ ('nokwargs')
 
     # __pragma__ ('kwargs')
     def arange(self, start=0, stop=None, step=None, dtype=None):
