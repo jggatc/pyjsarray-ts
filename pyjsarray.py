@@ -175,25 +175,26 @@ class Ndarray:
                 _dim = self._lshape(dim)
                 self._data = __new__(typedarray(list(_dat)))
                 self._shape = (len(self._data),)
-                self.setshape(tuple(list(_dim)))
+                self._setshape(tuple(list(_dim)))
         else:
             self._data = dim
             self._shape = (dim.length,)
             self._indices = (self._shape[0],)
     # __pragma__ ('nokwargs')
 
-    def getshape(self):
-        """
-        Return array shape.
-        """
+    @property
+    def shape(self):
         return self._shape
 
-    def setshape(self, *dim):
-        """
-        Set shape of array.
-        Argument is new shape.
-        Raises TypeError if shape is not appropriate.
-        """
+    @shape.setter
+    def shape(self, val):
+        self._setshape(val)
+
+    @property
+    def dtype(self):
+        return self._dtype
+
+    def _setshape(self, *dim):
         if isinstance(dim[0], tuple):
             dim = dim[0]
         size = 1
@@ -211,18 +212,6 @@ class Ndarray:
             indices.append(size)
         self._indices = tuple(indices)
         return None
-
-    @property
-    def shape(self):
-        return self._shape
-
-    @shape.setter
-    def shape(self, val):
-        self.setshape(val)
-
-    @property
-    def dtype(self):
-        return self._dtype
 
     def _lflatten(self, l):
         for el in l:
@@ -660,7 +649,7 @@ class Ndarray:
         _data = __new__(self._typedarray[self._dtype](d_len*n*p))
         array = Ndarray(_data, self._dtype)
         # __pragma__ ('opov')
-        array.setshape(tuple(d+(n,p)))
+        array._setshape(tuple(d+(n,p)))
         if x_dim == 2:
             arrays = [(self, _other, array)]
         elif x_dim == 3:
@@ -1282,7 +1271,7 @@ class Ndarray:
         array = Ndarray(subarray, self._dtype)
         shape = list(self._shape)
         shape[axis1], shape[axis2] = shape[axis2], shape[axis1]
-        array.setshape(tuple(shape))
+        array._setshape(tuple(shape))
         return array
 
     def tolist(self):
@@ -1613,7 +1602,7 @@ class ImageMatrix(Ndarray):
         """
         self._imagedata = ImageData(imagedata)
         Ndarray.__init__(self, self._imagedata.data, 'uint8c')
-        self.setshape(self._imagedata.height,self._imagedata.width,4)
+        self._setshape(self._imagedata.height,self._imagedata.width,4)
 
     def getWidth(self):
         """
