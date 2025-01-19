@@ -6,5 +6,5 @@ The module also includes an Ndarray class to instantiate N-dimensional arrays, I
 
 PyjsArray is released under the MIT License, see license.txt for further information.
 
-PyjsArray docs: https://gatc.ca/projects/pyjsdl/doc/pyjsdl.pyjsarray-module.html
+PyjsArray docs: https://gatc.ca/projects/pyjsdl-ts/doc/pyjsdl.pyjsarray-module.html
 
