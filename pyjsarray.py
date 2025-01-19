@@ -19,7 +19,7 @@
 #OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #THE SOFTWARE.
 
-#PyjsArray version 0.54
+#PyjsArray version 0.55
 #Project Site: https://gatc.ca/
 
 from math import ceil as _ceil, floor as _floor, sqrt as _sqrt
@@ -37,11 +37,20 @@ class window:
 class Object:
     def getPrototypeOf(*args):
         return None
+
+__pragma__ = lambda *arg:None
 # __pragma__ ('noskip')
 
 
 # __pragma__ ('noopov')
 # __pragma__ ('noalias', 'isNaN')
+
+
+hasattr = __pragma__ ('js', {},
+"""function (obj, name) {
+    return typeof obj === 'object' && name in obj;
+};
+""")
 
 
 def Uint8ClampedArray(*args):
@@ -119,19 +128,18 @@ class Ndarray:
                    'float32': window.Float32Array,
                    'float64': window.Float64Array}
 
-    _dtypes = {'uint8c':'uint8c', 'x':'uint8c',
-               'int8':'int8', 'b':'int8',
-               'uint8':'uint8', 'B':'uint8',
-               'int16':'int16', 'h':'int16',
-               'uint16':'uint16', 'H':'uint16',
-               'int32':'int32', 'i':'int32',
-               'uint32':'uint32', 'I':'uint32',
-               'float32':'float32', 'f':'float32',
-               'float64':'float64', 'd':'float64'}
+    _dtypes = {'uint8c':'uint8c', 'x':'uint8c', 0:'uint8c',
+               'int8':'int8', 'b':'int8', 4:'int8',
+               'uint8':'uint8', 'B':'uint8', 1:'uint8',
+               'int16':'int16', 'h':'int16', 5:'int16',
+               'uint16':'uint16', 'H':'uint16', 2:'uint16',
+               'int32':'int32', 'i':'int32', 6:'int32',
+               'uint32':'uint32', 'I':'uint32', 3:'uint32',
+               'float32':'float32', 'f':'float32', 7:'float32',
+               'float64':'float64', 'd':'float64', 8:'float64'}
 
     _opts = {'precision':4, 'nanstr':'nan', 'infstr':'inf'}
 
-    # __pragma__ ('kwargs')
     def __init__(self, dim, dtype='float64'):
         """
         Generate an N-dimensional array of TypedArray data.
@@ -175,26 +183,24 @@ class Ndarray:
                 _dim = self._lshape(dim)
                 self._data = __new__(typedarray(list(_dat)))
                 self._shape = (len(self._data),)
-                self._setshape(tuple(list(_dim)))
+                self.setshape(tuple(list(_dim)))
         else:
             self._data = dim
             self._shape = (dim.length,)
             self._indices = (self._shape[0],)
-    # __pragma__ ('nokwargs')
 
-    @property
-    def shape(self):
+    def getshape(self):
+        """
+        Return array shape.
+        """
         return self._shape
 
-    @shape.setter
-    def shape(self, val):
-        self._setshape(val)
-
-    @property
-    def dtype(self):
-        return self._dtype
-
-    def _setshape(self, *dim):
+    def setshape(self, *dim):
+        """
+        Set shape of array.
+        Argument is new shape.
+        Raises TypeError if shape is not appropriate.
+        """
         if isinstance(dim[0], tuple):
             dim = dim[0]
         size = 1
@@ -212,6 +218,14 @@ class Ndarray:
             indices.append(size)
         self._indices = tuple(indices)
         return None
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @shape.setter
+    def shape(self, val):
+        self.setshape(val)
 
     def _lflatten(self, l):
         for el in l:
@@ -649,7 +663,7 @@ class Ndarray:
         _data = __new__(self._typedarray[self._dtype](d_len*n*p))
         array = Ndarray(_data, self._dtype)
         # __pragma__ ('opov')
-        array._setshape(tuple(d+(n,p)))
+        array.setshape(tuple(d+(n,p)))
         if x_dim == 2:
             arrays = [(self, _other, array)]
         elif x_dim == 3:
@@ -1204,7 +1218,8 @@ class Ndarray:
             _data = data
             dataLn = data.length
         else:
-            self._data.fill(data)
+            for index in range(self._data.length):
+                self._data[index] = data
             return None
         if dataLn == self._data.length:
             for index in range(self._data.length):
@@ -1218,7 +1233,8 @@ class Ndarray:
         """
         Set array elements to value argument.
         """
-        self._data.fill(value)
+        for index in range(self._data.length):
+            self._data[index] = value
         return None
 
     def copy(self):
@@ -1271,7 +1287,7 @@ class Ndarray:
         array = Ndarray(subarray, self._dtype)
         shape = list(self._shape)
         shape[axis1], shape[axis2] = shape[axis2], shape[axis1]
-        array._setshape(tuple(shape))
+        array.setshape(tuple(shape))
         return array
 
     def tolist(self):
@@ -1300,12 +1316,17 @@ class Ndarray:
         """
         return self._data
 
+    def toString(self):
+        return self.__str__()
+
+
+ndarray = Ndarray
+array = Ndarray
+
 
 class NP:
 
     def __init__(self):
-        self.ndarray = Ndarray
-        self.random = _Random()
         self.uint8c = 'uint8c'
         self.int8 = 'int8'
         self.uint8 = 'uint8'
@@ -1315,8 +1336,8 @@ class NP:
         self.uint32 = 'uint32'
         self.float32 = 'float32'
         self.float64 = 'float64'
+        self.random = None
 
-    # __pragma__ ('kwargs')
     def array(self, obj, dtype=None):
         """
         Return Ndarray from an obj iterable. If optional dtype is not provided,
@@ -1325,25 +1346,20 @@ class NP:
         if dtype is None:
             dtype = self._get_dtype(obj)
         return Ndarray(obj, dtype)
-    # __pragma__ ('nokwargs')
 
-    # __pragma__ ('kwargs')
     def zeros(self, shape, dtype='float64'):
         """
         Return Ndarray of shape and optional dtype with zeroed values.
         """
         return Ndarray(shape, dtype)
-    # __pragma__ ('nokwargs')
 
-    # __pragma__ ('kwargs')
     def ones(self, shape, dtype='float64'):
         """
         Return Ndarray of shape and optional dtype with one values.
         """
         array = Ndarray(shape, dtype)
-        array.fill(1)
+        array.set(1)
         return array
-    # __pragma__ ('nokwargs')
 
     # __pragma__ ('kwargs')
     def arange(self, start=0, stop=None, step=None, dtype=None):
@@ -1359,24 +1375,6 @@ class NP:
         array = range(start, stop, step)
         if dtype is None:
             dtype = self._get_dtype(array)
-        return Ndarray(array, dtype)
-    # __pragma__ ('nokwargs')
-
-    # __pragma__ ('kwargs')
-    def linspace(self, start, stop, num=50, endpoint=True, dtype='float64'):
-        """
-        Return Ndarray of evenly spaced values from start to stop.
-        Optional arguments are num, endpoint, and dtype.
-        """
-        if endpoint:
-            if num == 1:
-                array = [start]
-            else:
-                step = (stop-start) / (num-1)
-                array = [start + step * i for i in range(num)]
-        else:
-            step = (stop-start) / num
-            array = [start + step * i for i in range(num)]
         return Ndarray(array, dtype)
     # __pragma__ ('nokwargs')
 
@@ -1446,7 +1444,10 @@ class NP:
         return dtype
 
 
-class _Random:
+np = NP()
+
+
+class Random:
 
     def __init__(self):
         self._gauss_next = None
@@ -1569,9 +1570,7 @@ class _Random:
         return array
 
 
-np = NP()
-ndarray = Ndarray
-array = Ndarray
+np.random = Random()
 
 
 class ImageData:
@@ -1602,7 +1601,7 @@ class ImageMatrix(Ndarray):
         """
         self._imagedata = ImageData(imagedata)
         Ndarray.__init__(self, self._imagedata.data, 'uint8c')
-        self._setshape(self._imagedata.height,self._imagedata.width,4)
+        self.setshape(self._imagedata.height,self._imagedata.width,4)
 
     def getWidth(self):
         """
@@ -1931,6 +1930,9 @@ class BitSet:
         new_bitset._data = data
         new_bitset._width = self._width
         return new_bitset
+
+    def toString(self):
+        return self.__str__()
 
 
 class BitSet16(BitSet):

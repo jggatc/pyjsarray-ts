@@ -1,4 +1,4 @@
-0.54_dev
+0.55    2025-01-18
 -add statements for python env.
 -revise JS object instantiate statement for opov issue.
 -refactor pyjsarray for performance.
