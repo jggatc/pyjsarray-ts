@@ -1,0 +1,17 @@
+0.56    2026-05-10
+-update docstrings.
+
+0.55    2025-01-18
+-add statements for python env.
+-revise JS object instantiate statement for opov issue.
+-refactor pyjsarray for performance.
+-revise pyjsarray ndarray indexing.
+-revise ndarray str method.
+-add ndarray constructor methods.
+-add ndarray stats methods.
+-add ndarray dot method.
+-add ndarray linspace method.
+
+0.54    2021-07-16
+-revise pyjsarray module for transcrypt.
+
